@@ -5,11 +5,11 @@ from codechart import *
 
 
 
-leftCenter = 1
-rightCenter = 5.5
-itemWidth = 2
-itemHeight = 1.2
-lineHeight = 2.5
+leftCenter = 10
+rightCenter = 55
+itemWidth = 20
+itemHeight = 12
+lineHeight = 25
 diamondScale = 1.5
 
 
@@ -17,12 +17,12 @@ p = Plot();
 
 Style.noFill();
 Style.stroke(0,0,0);
-Style.strokeWidth(0.01);
+Style.strokeWidth(0.2);
 Style.lineStyle("SOLID")
 Style.textHAlign("CENTER");
 Style.textVAlign("MIDDLE");
 Style.textHFlush("CENTER");
-Style.textSize(0.9);
+Style.textSize(9);
 
 #e1 = Ellipse(leftCenter, -lineHeight-0.5, itemWidth/2*1.3, itemHeight/2, 0)
 e1 = FC_Terminator(

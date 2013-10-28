@@ -2,6 +2,8 @@ __all__ = ['Plot']
 from pyx import *
 from cc_Color import Color
 
+import Image
+
 class Plot:
 
 	def __init__(self):
@@ -11,11 +13,11 @@ class Plot:
 
 		'''Parameters'''
 		'''stroke and fill'''
-		self.doStroke 		= True;
-		self.doFill   		= False;
-		self.stokeColor 	= Color(0, 0, 0);
-		self.fillColor  	= Color(0, 0, 0);
-		self.strokeWeight 	= 1;
+		self.doStroke 		= True
+		self.doFill   		= False
+		self.stokeColor 	= Color(0, 0, 0)
+		self.fillColor  	= Color(0, 0, 0)
+		self.strokeWeight 	= 1
 
 	def addShape(self, *shapes):
 		for shape in shapes:
@@ -23,10 +25,15 @@ class Plot:
 
 	def draw(self):
 		for shape in self.shapeList:
-			shape.draw(self.canvas);
+			shape.draw(self.canvas)
 
 
 
 	def save(self, filename):
 		self.canvas.writeEPSfile(filename)
 		self.canvas.writePDFfile(filename)
+		img = Image.open(filename+".eps")
+		print img.format, img.size, img.mode
+		img.resize((img.size[0]*2, img.size[1]*2))
+		print img.format, img.size, img.mode
+		img.save(filename+".png")
