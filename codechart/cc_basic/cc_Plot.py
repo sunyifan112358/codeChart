@@ -2,10 +2,9 @@ __all__ = ['Plot']
 from pyx import *
 from cc_Color import Color
 
-from PIL import Image
+import Image
 
 class Plot:
-	'''A container of all shapes and a canvas'''	
 
 	def __init__(self):
 		self.canvas = canvas.canvas()
@@ -34,5 +33,7 @@ class Plot:
 		self.canvas.writeEPSfile(filename)
 		self.canvas.writePDFfile(filename)
 		img = Image.open(filename+".eps")
-		#img.resize((img.size[0]*2, img.size[1]*2))
+		print img.format, img.size, img.mode
+		img.resize((img.size[0]*2, img.size[1]*2))
+		print img.format, img.size, img.mode
 		img.save(filename+".png")

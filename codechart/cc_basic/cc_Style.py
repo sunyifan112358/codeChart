@@ -15,15 +15,15 @@ class StyleSet(object):
 
 		'''Arrow related'''
 		self.useBeginArrow = False;
-		self.beginArrowSize = 2;
+		self.beginArrowSize = 0.2;
 		self.useEndArrow = True;
-		self.endArrowSize = 2;
+		self.endArrowSize = 0.2;
 
 		''' Text related '''
 		self.textHAlign = "LEFT";
 		self.textVAlign = "BASELINE";
 		self.textHFlush = "LEFT";
-		self.textSize  = 10;
+		self.textSize  = 0;
 		
 
 class Style(object):

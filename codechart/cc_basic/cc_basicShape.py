@@ -14,7 +14,7 @@ from cc_Style import *
 
 class Ellipse(Shape):
 
-	def __init__(self, x=0, y=0, r1=800, r2=500, degree=0):
+	def __init__(self, x, y, r1, r2, degree):
 		super(Ellipse, self).__init__(Point(x, y));
 		self.x = x;
 		self.y = y;
@@ -26,6 +26,8 @@ class Ellipse(Shape):
 		self.addJointPoint(Point(x, y-r2));
 		self.addJointPoint(Point(x+r1, y));
 		self.addJointPoint(Point(x, y+r2));
+
+
 
 	def draw(self, canvas):
 		super(Ellipse,self).draw(canvas);
@@ -265,5 +267,4 @@ class RoundedRect(Shape):
 				]
 			)
 
-if __name__ == "__main__":
-	Ellipse.preview();
+

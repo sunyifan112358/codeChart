@@ -2,6 +2,9 @@ from pyx import *
 
 from codechart import * 
 
+
+
+
 leftCenter = 10
 rightCenter = 55
 itemWidth = 20
@@ -27,7 +30,7 @@ e1 = FC_Terminator(
 		-lineHeight-0.3, 
 		itemWidth*1.3, 
 		itemHeight,
-		r"Enter a New Region"
+		r"Enter a new rigeon"
 	)
 d1 = FC_Decision( 
 		leftCenter, 
@@ -70,7 +73,7 @@ r1 = FC_Process(
 		y = -lineHeight*2, 
 		width=itemWidth, 
 		height=itemHeight,
-		text=r"Find Correlation"
+		text=r"Query Database"
 	);
 
 r2 = FC_Process(
@@ -78,7 +81,7 @@ r2 = FC_Process(
 		-lineHeight*3, 
 		itemWidth, 
 		itemHeight,
-		r"Query Database"
+		r"Find Correlation"
 	)
 
 d4 = FC_Decision(
@@ -98,31 +101,33 @@ r3 = FC_Process(
 	)
 
 
+
+
 p.addShape(e1, e2, d1, d2, d3, d4, r1, r2, r3);
 
 Style.textVAlign("TOP")
 Style.textHAlign("LEFT")
-Style.textSize(6)
+Style.textSize(0.5)
 t1 = Text(
 		r"PU Present",
-		leftCenter+itemWidth/2.0*diamondScale-1,
-		-lineHeight*3 - 1 - 0.5
+		leftCenter+itemWidth/2.0*diamondScale,
+		-lineHeight*3 - 0.05
 	)
 t2 = Text(
 		r"PU Present",
 		leftCenter+itemWidth/2.0*diamondScale,
-		-lineHeight*4 - 1
+		-lineHeight*4 - 0.05
 	)
 
 t3 = Text(
 		r"PU Absent",
-		leftCenter + 1,
-		-lineHeight*4 - itemHeight/2.0*diamondScale -3 - 1
+		leftCenter + 0.05,
+		-lineHeight*4 - itemHeight/2.0*diamondScale -0.3 - 0.05
 	)
 
 p.addShape(t1, t2, t3);
 
-Style.endArrow(1)
+
 
 p.addShape(
 	StraightLine(
