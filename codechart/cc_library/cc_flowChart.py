@@ -4,7 +4,7 @@ __all__ = [
 	'FC_Terminator'
 ];
 
-from ..cc_basic import *
+from cc_basic import *
 
 class FC_Process(ComplexShape):
 
@@ -21,10 +21,15 @@ class FC_Process(ComplexShape):
 		Style.textHAlign ("CENTER", instance = self.style);
 
 		s = Rectangle(x, y, width, height, style = self.style);
-		t = Text(text, x, y, width*0.9/self.style.textSize, style = self.style);
+		t = Text(
+			text, 
+			x, 
+			y, 
+			width*0.9/self.style.textSize, 
+			style = self.style
+		);
 
 		self.addShape(s, t);
-
 
 		self.jointPoints = s.jointPoints
 
@@ -34,8 +39,8 @@ class FC_Decision(ComplexShape):
 					self,
 					x = 0,
 					y = 0,
-					width = 4,
-					height = 3,
+					width = 100,
+					height = 40,
 					text = "Selection",
 					textYes = "Yes",
 					textYesPos = "BOTTOM",
@@ -73,27 +78,28 @@ class FC_Decision(ComplexShape):
 		self.jointPoints = dia.jointPoints
 
 	def getTextPosPoint(self, posString):
+		shiftFactor = 0.05
 		if posString != "NONE":
 			if posString == "LEFT":
 				Style.textVAlign("BOTTOM", self.style);
 				Style.textHAlign("RIGHT", self.style);
-				yesX = self.x - self.width/2 - 0.05
-				yesY = self.y + 0.05
+				yesX = self.x - self.width/2 - self.width*shiftFactor
+				yesY = self.y + self.height*shiftFactor
 			elif posString == "RIGHT":
 				Style.textVAlign("BOTTOM", self.style);
 				Style.textHAlign("LEFT", self.style);
-				yesX = self.x + self.width/2 + 0.05
-				yesY = self.y + 0.05
+				yesX = self.x + self.width/2 + self.width*shiftFactor
+				yesY = self.y + self.height*shiftFactor
 			elif posString == "TOP":
 				Style.textVAlign("BOTTOM", self.style);
 				Style.textHAlign("LEFT", self.style);
-				yesX = self.x + 0.05
-				yesY = self.y + self.height/2 + 0.05
+				yesX = self.x + self.width*shiftFactor
+				yesY = self.y + self.height/2 + self.height*shiftFactor
 			elif posString == "BOTTOM":
 				Style.textVAlign("TOP", self.style);
 				Style.textHAlign("LEFT", self.style);
-				yesX = self.x + 0.05
-				yesY = self.y - self.height/2 - 0.05
+				yesX = self.x + self.width*shiftFactor
+				yesY = self.y - self.height/2 - self.height*shiftFactor
 			else:
 				raise Exception(
 						"Invalid posString: " + posString + 
@@ -102,12 +108,6 @@ class FC_Decision(ComplexShape):
 			return Point(yesX, yesY)
 		else:
 			return None
-
-
-
-
-			
-
 
 class FC_Terminator(ComplexShape):
 	def __init__(
@@ -141,3 +141,7 @@ class FC_Terminator(ComplexShape):
 		self.addShape(rr, t)
 
 		self.jointPoints = rr.jointPoints
+
+if __name__ == '__main__' and __package__ is None:
+
+	FC_Decision.preview();
