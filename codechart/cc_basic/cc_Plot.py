@@ -33,7 +33,7 @@ class Plot:
 		self.canvas.writeEPSfile(filename)
 		self.canvas.writePDFfile(filename)
 		img = Image.open(filename+".eps")
-		print img.format, img.size, img.mode
-		img.resize((img.size[0]*2, img.size[1]*2))
-		print img.format, img.size, img.mode
+		#print img.format, img.size, img.mode
+		#img.resize((img.size[0]*2, img.size[1]*2))
+		#print img.format, img.size, img.mode
 		img.save(filename+".png")

@@ -7,23 +7,23 @@ class StyleSet(object):
 	def __init__(self):
 		''' Stroke and fill '''
 		self.doFill = False
-		self.doStroke = False
+		self.doStroke = True
 		self.fillColor = Color(0, 0, 0)
 		self.strokeColor = Color(0, 0, 0)
-		self.strokeWidth = 1
+		self.strokeWidth = 5
 		self.lineStyle = "SOLID"
 
 		'''Arrow related'''
 		self.useBeginArrow = False;
-		self.beginArrowSize = 0.2;
+		self.beginArrowSize = 2;
 		self.useEndArrow = True;
-		self.endArrowSize = 0.2;
+		self.endArrowSize = 2;
 
 		''' Text related '''
 		self.textHAlign = "LEFT";
 		self.textVAlign = "BASELINE";
 		self.textHFlush = "LEFT";
-		self.textSize  = 0;
+		self.textSize  = 8;
 		
 
 class Style(object):

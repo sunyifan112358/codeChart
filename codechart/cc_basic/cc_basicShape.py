@@ -14,7 +14,12 @@ from cc_Style import *
 
 class Ellipse(Shape):
 
-	def __init__(self, x, y, r1, r2, degree):
+	def __init__(
+			self, 
+			x=0, y=0, 
+			r1=80, r2=30,
+			degree=0
+		):
 		super(Ellipse, self).__init__(Point(x, y));
 		self.x = x;
 		self.y = y;
@@ -58,7 +63,19 @@ class Ellipse(Shape):
 
 class Polygon(Shape):
 
-	def __init__(self, *pos):
+	def __init__(
+			self, 
+			*pos
+		):
+		if(pos==()):
+			pos = (
+				Point(0, 0),
+				Point(100, 50),
+				Point(200, 30),
+				Point(150, 100),
+				Point(50, 70)
+			) 
+		
 		super(Polygon, self).__init__(Point.center(*pos));
 
 		pathitems = [];
@@ -93,7 +110,12 @@ class Polygon(Shape):
 			)
 
 class Diamond(ComplexShape):
-	def __init__(self, x, y, width, height, style=None):
+	def __init__(
+			self, 
+			x = 0, y = 0, 
+			width = 80, height = 50, 
+			style=None
+		):
 		super(Diamond, self).__init__(Point(x, y), style);
 
 		p1 = Point(x-width/2.0, y);
@@ -119,7 +141,12 @@ class Diamond(ComplexShape):
 
 
 class Rectangle(ComplexShape):
-	def __init__(self, x, y, width, height, style = None):
+	def __init__(
+			self, 
+			x=0, y=0, 
+			width=100, height=80, 
+			style = None
+		):
 		super(Rectangle, self).__init__(Point(x, y), style = style);
 		p1 = Point(x-width/2.0, y-height/2.0);
 		p2 = Point(x+width/2.0, y-height/2.0);
@@ -267,4 +294,8 @@ class RoundedRect(Shape):
 				]
 			)
 
-
+if __name__ == "__main__":
+	Diamond.preview();
+	Ellipse.preview();
+	Polygon.preview();
+	Rectangle.preview();

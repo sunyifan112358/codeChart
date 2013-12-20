@@ -1,9 +1,5 @@
-from pyx import *
-
+#from pyx import *
 from codechart import * 
-
-
-
 
 leftCenter = 10
 rightCenter = 55
@@ -24,7 +20,6 @@ Style.textVAlign("MIDDLE");
 Style.textHFlush("CENTER");
 Style.textSize(9);
 
-#e1 = Ellipse(leftCenter, -lineHeight-0.5, itemWidth/2*1.3, itemHeight/2, 0)
 e1 = FC_Terminator(
 		leftCenter,
 		-lineHeight-0.3, 
@@ -100,29 +95,26 @@ r3 = FC_Process(
 		r"Broadcast Correlation"
 	)
 
-
-
-
 p.addShape(e1, e2, d1, d2, d3, d4, r1, r2, r3);
 
 Style.textVAlign("TOP")
 Style.textHAlign("LEFT")
-Style.textSize(0.5)
+Style.textSize(6)
 t1 = Text(
 		r"PU Present",
 		leftCenter+itemWidth/2.0*diamondScale,
-		-lineHeight*3 - 0.05
+		-lineHeight*3 - 0.5
 	)
 t2 = Text(
 		r"PU Present",
 		leftCenter+itemWidth/2.0*diamondScale,
-		-lineHeight*4 - 0.05
+		-lineHeight*4 - 0.5
 	)
 
 t3 = Text(
 		r"PU Absent",
-		leftCenter + 0.05,
-		-lineHeight*4 - itemHeight/2.0*diamondScale -0.3 - 0.05
+		leftCenter + 0.5,
+		-lineHeight*4 - itemHeight/2.0*diamondScale -3 - 0.5
 	)
 
 p.addShape(t1, t2, t3);
@@ -201,9 +193,6 @@ p.addShape(
 	)
 )
 
-
-
-
 l1 = ElbowLine(
 		False,
 		r3.jointPoints[4],
@@ -226,8 +215,6 @@ p.addShape(
 		
 	)
 )
-
-
 
 
 p.draw();

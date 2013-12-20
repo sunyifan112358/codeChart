@@ -1,11 +1,12 @@
 __all__ = ['Shape', 'ComplexShape'];
 from pyx import *
 from cc_Point import Point
+from cc_Plot import Plot
 from cc_Style import Style
 
 class Shape(object):
 
-	def __init__(self, center, style = None):
+	def __init__(self, center=Point(0,0), style = None):
 		self.center = center;
 		self.jointPoints = [];
 		if not style:
@@ -16,8 +17,7 @@ class Shape(object):
 	def addJointPoint(self, point):
 		self.jointPoints.append(point);
 
-	def draw(self, canvas):
-		showJointPoints = False
+	def draw(self, canvas, showJointPoints=False):
 		if(showJointPoints):
 			for jointPoint in self.jointPoints:
 				canvas.stroke(
@@ -27,6 +27,13 @@ class Shape(object):
 						0.1
 					),
 				)
+
+	@classmethod
+	def preview(cls):
+		p = Plot();
+		p.addShape(cls());
+		p.draw();
+		p.save('preview/' + cls.__name__);
 
 class ComplexShape(Shape):
 	''' Complex shape is a group of primitive or complex shapes '''
@@ -60,4 +67,5 @@ class ComplexShape(Shape):
 				)
 				
 
-
+if __name__ == "__main":
+	pass

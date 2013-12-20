@@ -4,7 +4,7 @@ __all__ = [
 	'FC_Terminator'
 ];
 
-from ..cc_basic import *
+from codechart.cc_basic import *
 
 class FC_Process(ComplexShape):
 
