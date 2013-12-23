@@ -1,0 +1,188 @@
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.7.3)  22 DEC 2013 15:12
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**tmps35npH
+(./tmps35npH.tex
+LaTeX2e <2011/06/27>
+Babel <3.9f> and hyphenation patterns for 78 languages loaded.
+)
+*\scrollmode
+
+
+*\raiseerror%
+! Undefined control sequence.
+<*> \raiseerror
+               %
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+*\def\PyX{P\kern-.3em\lower.5ex\hbox{Y}\kern-.18em X}%
+
+*\gdef\PyXBoxHAlign{0}%
+
+*\newbox\PyXBox%
+\PyXBox=\box26
+
+*\newbox\PyXBoxHAligned%
+\PyXBoxHAligned=\box27
+
+*\newdimen\PyXDimenHAlignLT%
+\PyXDimenHAlignLT=\dimen102
+
+*\newdimen\PyXDimenHAlignRT%
+\PyXDimenHAlignRT=\dimen103
+
+*\gdef\PyXFlushHAlign{0}%
+
+*\def\PyXragged{%
+
+*\leftskip=0pt plus \PyXFlushHAlign fil%
+
+*\rightskip=0pt plus 1fil%
+
+*\advance\rightskip0pt plus -\PyXFlushHAlign fil%
+
+*\parfillskip=0pt%
+
+*\pretolerance=9999%
+
+*\tolerance=9999%
+
+*\parindent=0pt%
+
+*\hyphenpenalty=9999%
+
+*\exhyphenpenalty=9999}%
+
+*\newbox\PyXBoxVBox%
+\PyXBoxVBox=\box28
+
+*\newdimen\PyXDimenVBox%
+\PyXDimenVBox=\dimen104
+
+*\newbox\PyXBoxVAlign%
+\PyXBoxVAlign=\box29
+
+*\newdimen\PyXDimenVAlign%
+\PyXDimenVAlign=\dimen105
+
+*\newdimen\PyXDimenVShift%
+\PyXDimenVShift=\dimen106
+
+*\long\def\ProcessPyXBox#1#2{%
+
+*\setbox\PyXBox=\hbox{{#1}}%
+
+*\PyXDimenHAlignLT=\PyXBoxHAlign\wd\PyXBox%
+
+*\PyXDimenHAlignRT=\wd\PyXBox%
+
+*\advance\PyXDimenHAlignRT by -\PyXDimenHAlignLT%
+
+*\gdef\PyXBoxHAlign{0}%
+
+*\immediate\write16{PyXBox:page=#2,lt=\the\PyXDimenHAlignLT,rt=\the\PyXDimenHAl
+ignRT,ht=\the\ht\PyXBox,dp=\the\dp\PyXBox:}%
+
+*\setbox\PyXBoxHAligned=\hbox{\kern-\PyXDimenHAlignLT\box\PyXBox}%
+
+*\ht\PyXBoxHAligned0pt%
+
+*{\count0=80\count1=121\count2=88\count3=#2\shipout\box\PyXBoxHAligned}}%
+
+*\def\PyXInput#1{\immediate\write16{PyXInputMarker:executeid=#1:}}%
+
+*\def\PyXMarker#1{\hskip0pt\special{PyX:marker #1}}%%
+
+*\PyXInput{1}%
+PyXInputMarker:executeid=1:
+
+*\makeatletter%
+
+*\let\saveProcessOptions=\ProcessOptions%
+
+*\def\ProcessOptions{%
+
+*\def\Gin@driver{/Users/uranusbean/Dropbox/codeChart/codechart/cc_library/tmps3
+5npH.pyx.def}%
+
+*\def\c@lor@namefile{dvipsnam.def}%
+
+*\saveProcessOptions}%
+
+*\makeatother%
+
+*\PyXInput{2}%
+PyXInputMarker:executeid=2:
+
+*\documentclass{article}%
+
+*\PyXInput{3}%
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen107
+)
+PyXInputMarker:executeid=3:
+
+*\begin{document}%
+No file tmps35npH.aux.
+\openout1 = `tmps35npH.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 0.
+LaTeX Font Info:    ... okay on input line 0.
+
+*\PyXInput{4}%
+PyXInputMarker:executeid=4:
+
+*\ProcessPyXBox{\setbox\PyXBoxVAlign=\hbox{{\linewidth=56.90551truept\vtop{\hsi
+ze=\linewidth\textwidth=\linewidth{}\gdef\PyXBoxHAlign{0.50000}\gdef\PyXFlushHA
+lign{0.50000}\PyXragged{}IDLE}}}\PyXDimenVAlign=0.50000\ht\PyXBoxVAlign\advance
+\PyXDimenVAlign by -0.50000\dp\PyXBoxVAlign\lower\PyXDimenVAlign\box\PyXBoxVAli
+gn%
+
+*}{1}%
+PyXBox:page=1,lt=28.45276pt,rt=28.45276pt,ht=3.41666pt,dp=3.41666pt:
+[80.121.88.1]
+*\PyXInput{5}%
+PyXInputMarker:executeid=5:
+
+*\end{document}%
+(./tmps35npH.aux) 
+Here is how much of TeX's memory you used:
+ 217 strings out of 493316
+ 2371 string characters out of 6137931
+ 52155 words of memory out of 5000000
+ 3758 multiletter control sequences out of 15000+600000
+ 3640 words of font info for 14 fonts, out of 8000000 for 9000
+ 957 hyphenation exceptions out of 8191
+ 22i,3n,17p,320b,47s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on tmps35npH.dvi (1 page, 192 bytes).

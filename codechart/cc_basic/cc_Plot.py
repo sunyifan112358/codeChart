@@ -29,11 +29,16 @@ class Plot:
 
 
 
-	def save(self, filename):
+	def saveEPS(self, filename):
 		self.canvas.writeEPSfile(filename)
+	
+	def savePDF(self, filename):
 		self.canvas.writePDFfile(filename)
+	
+	def savePNG(self, filename):
+		self.saveEPS(filename)
 		img = Image.open(filename+".eps")
-		#print img.format, img.size, img.mode
-		#img.resize((img.size[0]*2, img.size[1]*2))
-		#print img.format, img.size, img.mode
-		img.save(filename+".png")
+		while img.size[0]*img.size[1] >= 1e7:
+			img = img.resize((img.size[0]/2, img.size[1]/2))
+		img.save(filename + ".png");
+		

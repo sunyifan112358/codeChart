@@ -10,7 +10,7 @@ class StyleSet(object):
 		self.doStroke = True
 		self.fillColor = Color(0, 0, 0)
 		self.strokeColor = Color(0, 0, 0)
-		self.strokeWidth = 5
+		self.strokeWidth = 1
 		self.lineStyle = "SOLID"
 
 		'''Arrow related'''
@@ -23,7 +23,7 @@ class StyleSet(object):
 		self.textHAlign = "LEFT";
 		self.textVAlign = "BASELINE";
 		self.textHFlush = "LEFT";
-		self.textSize  = 8;
+		self.textSize  = 24;
 		
 
 class Style(object):
@@ -81,8 +81,8 @@ class Style(object):
 			return style.linestyle.dashdotted
 		else:
 			raise Exception("Unsupport line style "+lineStyle+
-						" Choose from SOLID, DASHED, DOTTED and DASHDOTTED"
-					)
+					" Choose from SOLID, DASHED, DOTTED and DASHDOTTED"
+				)
 
 	@staticmethod
 	def noBeginArrow(instance = None):

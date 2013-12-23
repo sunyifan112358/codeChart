@@ -10,6 +10,15 @@ class Point:
 
 	def __repr__(self):
 		return self.__str__();
+	
+	def toTuple(self):
+		'''Get the tuple form of Point'''
+		return (self.x, self.y)
+
+	def move(self, point):
+		'''Move the point by a vector'''
+		p = Point( self.x + point.x, self.y + point.y )
+		return p	
 
 	@staticmethod
 	def center(*points):

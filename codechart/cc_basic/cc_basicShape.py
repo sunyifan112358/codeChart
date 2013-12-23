@@ -7,67 +7,52 @@ __all__ = [
 ]
 
 from pyx import *
+from pyx.metapost.path import beginknot, endknot, smoothknot, tensioncurve
+
 import math
 from cc_Point import Point
 from cc_Shape import *
 from cc_Style import *
 
-class Ellipse(Shape):
-
+class Ellipse(PrimitiveShape):
+	'''Ellipse and circle'''
 	def __init__(
 			self, 
 			x=0, y=0, 
-			r1=80, r2=30,
-			degree=0
+			r1=80, r2=None,
+			degree=0,
+			style = None
 		):
-		super(Ellipse, self).__init__(Point(x, y));
-		self.x = x;
-		self.y = y;
-		self.r1 = r1;
-		self.r2 = r2;
-		self.degree = degree;
+		if(r2==None):
+			r2=r1
+		super(Ellipse, self).__init__(Point(x, y), style);
+
+		pathitems = []
+		p1 = Point(x-r1, y)
+		p2 = Point(x, y-r2)
+		p3 = Point(x+r1, y)
+		p4 = Point(x, y+r2)
+		self.path = metapost.path.path([
+			smoothknot(*p1.toTuple()), tensioncurve(),
+			smoothknot(*p2.toTuple()), tensioncurve(),
+			smoothknot(*p3.toTuple()), tensioncurve(),
+			smoothknot(*p4.toTuple()), tensioncurve(),
+		])
+
 
 		self.addJointPoint(Point(x-r1, y));
 		self.addJointPoint(Point(x, y-r2));
 		self.addJointPoint(Point(x+r1, y));
 		self.addJointPoint(Point(x, y+r2));
 
-
-
-	def draw(self, canvas):
-		super(Ellipse,self).draw(canvas);
-		circle = path.circle(0,0,1);
-		if self.style.doFill:
-			canvas.fill(
-				circle, 
-				[
-					trafo.scale(sx=self.r1, sy=self.r2), 
-					trafo.rotate(self.degree),
-					trafo.translate(self.x, self.y),
-					self.style.fillColor.getPyxColor()
-				]
-			)
-		if self.style.doStroke:
-			canvas.stroke( 
-				circle, 
-				[
-					trafo.scale(sx=self.r1, sy=self.r2), 
-					trafo.rotate(self.degree),
-					trafo.translate(self.x, self.y),
-					self.style.strokeColor.getPyxColor(),
-					style.linewidth(self.style.strokeWidth),
-					Style.getPyXLineStyle(self.style.lineStyle)
-				]
-			)
-		
-
-class Polygon(Shape):
-
+class Polygon(PrimitiveShape):
+	'''Polygon'''
 	def __init__(
 			self, 
-			*pos
+			pos = None,
+			style = None
 		):
-		if(pos==()):
+		if pos==None:
 			pos = (
 				Point(0, 0),
 				Point(100, 50),
@@ -76,7 +61,7 @@ class Polygon(Shape):
 				Point(50, 70)
 			) 
 		
-		super(Polygon, self).__init__(Point.center(*pos));
+		super(Polygon, self).__init__(Point.center(*pos), style);
 
 		pathitems = [];
 		pathitems.append(path.moveto(pos[0].x, pos[0].y));
@@ -88,26 +73,7 @@ class Polygon(Shape):
 
 		pathitems.append(path.closepath())
 
-		self.poly = path.path(*pathitems);	
-
-	def draw(self, canvas):
-		super(Polygon,self).draw(canvas);
-		if self.style.doFill:
-			canvas.fill(
-				self.poly,
-				[
-					self.style.fillColor.getPyxColor()
-				]
-			)
-		if self.style.doStroke:
-			canvas.stroke(
-				self.poly,
-				[
-					self.style.strokeColor.getPyxColor(),
-					style.linewidth(self.style.strokeWidth),
-					Style.getPyXLineStyle(self.style.lineStyle)
-				]
-			)
+		self.path = path.path(*pathitems);	
 
 class Diamond(ComplexShape):
 	def __init__(
@@ -133,14 +99,11 @@ class Diamond(ComplexShape):
 		self.addJointPoint(Point.center(p3, p4));
 		self.addJointPoint(Point.center(p1, p4));
 
-		polygon = Polygon(p1, p2, p3, p4);
+		polygon = Polygon((p1, p2, p3, p4));
 		self.addShape(polygon);
 
-	def draw(self, canvas):
-		super(Diamond, self).draw(canvas);
-
-
 class Rectangle(ComplexShape):
+	'''Rectangle'''
 	def __init__(
 			self, 
 			x=0, y=0, 
@@ -162,14 +125,18 @@ class Rectangle(ComplexShape):
 		self.addJointPoint(Point.center(p3, p4));
 		self.addJointPoint(Point.center(p1, p4));
 
-		polygon = Polygon(p1, p2, p3, p4);
+		polygon = Polygon((p1, p2, p3, p4));
 		self.addShape(polygon);
 
-	def draw(self, canvas):
-		super(Rectangle, self).draw(canvas);
-
-class RoundedRect(Shape):
-	def __init__(self, x, y, width, height, border_radius = 0.5, style = None):
+class RoundedRect(PrimitiveShape):
+	'''Rounded Rectangle'''
+	def __init__(
+			self, 
+			x = 0, y = 0, 
+			width = 80, height = 60, 
+			border_radius = 5, 
+			style = None
+		):
 		super(RoundedRect, self).__init__(Point(x,y), style = style)
 		p1 = Point(x-width/2.0, y-height/2.0);
 		p2 = Point(x+width/2.0, y-height/2.0);
@@ -273,29 +240,11 @@ class RoundedRect(Shape):
 
 
 		pathitems.append( path.closepath() );
-		self.line = path.path( *pathitems );
-
-	def draw(self,canvas):
-		super(RoundedRect,self).draw(canvas);
-		if self.style.doFill:
-			canvas.fill(
-				self.line,
-				[
-					self.style.fillColor.getPyxColor()
-				]
-			)
-		if self.style.doStroke:
-			canvas.stroke(
-				self.line,
-				[
-					self.style.strokeColor.getPyxColor(),
-					style.linewidth(self.style.strokeWidth),
-					Style.getPyXLineStyle(self.style.lineStyle)
-				]
-			)
+		self.path = path.path( *pathitems );
 
 if __name__ == "__main__":
 	Diamond.preview();
 	Ellipse.preview();
 	Polygon.preview();
 	Rectangle.preview();
+	RoundedRect.preview();

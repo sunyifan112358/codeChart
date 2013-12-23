@@ -1,19 +1,25 @@
 __all__ = [
-			'Line',
-			'StraightLine',
-			'Polyline',
-			'ElbowLine'
-		]
+	'Line',
+	'StraightLine',
+	'Polyline',
+	'ElbowLine',
+	'TensionCurve'
+]
 from pyx import *
+from pyx.metapost.path import beginknot, endknot, smoothknot, tensioncurve
 from cc_Shape import *
 from cc_Point import Point
 from cc_Style import *
 
-class Line(Shape):
-	def __init__(self, center):
-		super(Line, self).__init__(center);
-
-		self.line = None;
+class Line(PrimitiveShape):
+	''' Abstract class for all lines'''
+	def __init__(
+			self, 
+			center = Point(0, 0), 
+			style=None
+		):
+		super(Line, self).__init__(center, style);
+		self.path = None;
 
 	def getStyleSetting(self):
 		lineStyle = [];
@@ -45,24 +51,25 @@ class Line(Shape):
 	def draw(self, canvas):
 		if self.style.doStroke:
 			canvas.stroke(
-				self.line,
-				self.getStyleSetting()
-			)
-		
+					self.path,
+					self.getStyleSetting()
+				)
+
 
 class StraightLine(Line):
-
-	def __init__(self, p1, p2):
-		super(StraightLine, self).__init__(Point.center(p1, p2));
+	''' A straight line from point to point'''
+	def __init__(
+			self, 
+			p1 = Point(0, 0),
+			p2 = Point(20, 20), 
+			style = None
+		):
+		super(StraightLine, self).__init__(Point.center(p1, p2), style);
 
 		pathitems = [];
 		pathitems.append(path.moveto(p1.x, p1.y));
 		pathitems.append(path.lineto(p2.x, p2.y));
-		self.line = path.path(*pathitems);
-
-	def draw(self, canvas):
-		super(StraightLine, self).draw(canvas)
-		
+		self.path = path.path(*pathitems);
 
 class Polyline(Line):
 
@@ -77,11 +84,11 @@ class Polyline(Line):
 			pathitems.append( path.lineto(pos[i+1].x, pos[i+1].y) )
 			self.addJointPoint( Point(pos[i+1].x, pos[i+1].y));
 
-		self.line = path.path(*pathitems);
+		self.path = path.path(*pathitems);
 
 	def draw(self, canvas):
 		super(Polyline,self).draw(canvas);
-		
+
 
 class ElbowLine(ComplexShape):
 	def __init__(self, firstFoldX, *pos):
@@ -97,14 +104,14 @@ class ElbowLine(ComplexShape):
 				p = Point(
 						pos[i+1].x,
 						pos[i].y
-					)
+						)
 			else:
 				p = Point(
 						pos[i].x,
 						pos[i+1].y
-					)
+						)
 
-			foldX = not foldX;
+				foldX = not foldX;
 			corners.append(p)
 			self.addJointPoint(p);
 		corners.append(pos[-1]);
@@ -113,5 +120,39 @@ class ElbowLine(ComplexShape):
 			Polyline( *corners )
 		)
 
-	def draw(self, canvas):
-		super(ElbowLine, self).draw(canvas);
+		def draw(self, canvas):
+			super(ElbowLine, self).draw(canvas);
+
+class TensionCurve(Line):
+	'''Curve from serveral points'''
+	def __init__(self, style=None, pos=None):
+		if pos==None :
+			pos = self.getDefaultPoints();
+		super(TensionCurve, self).__init__(Point.center(*pos), style);
+
+		pathitems = []
+		i = 0
+		for p in pos:
+			if i == 0:
+				pathitems.append(beginknot(*pos[0].toTuple()))
+			elif i == len(pos) - 1:
+				pathitems.append(tensioncurve())
+				pathitems.append(endknot(*pos[i].toTuple()))
+			else:
+				pathitems.append(tensioncurve())
+				pathitems.append(smoothknot(*pos[i].toTuple()))
+			i += 1
+		self.path = metapost.path.path(pathitems)
+
+	def getDefaultPoints(self):
+		'''generate defult points'''
+		return (
+				Point(0, 0), 
+				Point(50, 40),
+				Point(60, 70),
+				Point(0, -20)
+			)
+
+if __name__ == "__main__":
+	StraightLine.preview()
+	TensionCurve.preview()
