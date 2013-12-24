@@ -9,27 +9,25 @@ class Text(Shape):
 
 	def __init__(
 			self, 
-			latexString = r"$\int_{-\infty}^{\infty}tdt$", 
+			style = None,
 			x = 0, y = 0, 
-			rotate = 0,
-			parWidth = 20, 
-			style = None
+			width = 20,
+			string = r"$\int_{-\infty}^{\infty}tdt$"
 		):
-		super(Text, self).__init__(Point(x, y), style);
-		if parWidth:
-			self.parbox = text.parbox(parWidth/self.style.textSize);
+		super(Text, self).__init__(style, Point(x, y));
+		if width:
+			self.parbox = text.parbox(width/self.style.getTextSize());
 		else:
 			self.parbox = None
-		self.latexString = latexString;
+		self.string = string;
 		self.x = x;
 		self.y = y;
-		self.rotate = rotate
 
 	def draw(self, canvas):
 		canvas.text(
 			self.x, 
 			self.y, 
-			self.latexString, 
+			self.string, 
 			self.getStyleSetting()
 		)
 
@@ -37,12 +35,11 @@ class Text(Shape):
 		styleSetting = []
 		if self.parbox:
 			styleSetting.append(self.parbox)
-		styleSetting.append(Style.getPyXHAlign(self.style.textHAlign))
-		styleSetting.append(Style.getPyXVAlign(self.style.textVAlign))
-		styleSetting.append(Style.getPyXHFlush(self.style.textHFlush))
-		#styleSetting.append(Style.getPyXTextSize(self.style.textSize))
-		styleSetting.append(trafo.scale(sx=self.style.textSize))
-		styleSetting.append(trafo.rotate(self.rotate))
+		styleSetting.append(self.style.getPyXHAlign())
+		styleSetting.append(self.style.getPyXVAlign())
+		styleSetting.append(self.style.getPyXHFlush())
+		styleSetting.append(self.style.getPyXTextSize())
+		styleSetting.append(self.style.getPyXRotate())
 		return styleSetting
 
 if __name__ == "__main__":

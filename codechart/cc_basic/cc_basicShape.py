@@ -18,14 +18,13 @@ class Ellipse(PrimitiveShape):
 	'''Ellipse and circle'''
 	def __init__(
 			self, 
+			style = None,
 			x=0, y=0, 
 			r1=80, r2=None,
-			degree=0,
-			style = None
 		):
 		if(r2==None):
 			r2=r1
-		super(Ellipse, self).__init__(Point(x, y), style);
+		super(Ellipse, self).__init__(style, Point(x, y))
 
 		pathitems = []
 		p1 = Point(x-r1, y)
@@ -49,8 +48,8 @@ class Polygon(PrimitiveShape):
 	'''Polygon'''
 	def __init__(
 			self, 
+			style = None,
 			pos = None,
-			style = None
 		):
 		if pos==None:
 			pos = (
@@ -61,7 +60,7 @@ class Polygon(PrimitiveShape):
 				Point(50, 70)
 			) 
 		
-		super(Polygon, self).__init__(Point.center(*pos), style);
+		super(Polygon, self).__init__(style, Point.center(*pos));
 
 		pathitems = [];
 		pathitems.append(path.moveto(pos[0].x, pos[0].y));
@@ -78,11 +77,11 @@ class Polygon(PrimitiveShape):
 class Diamond(ComplexShape):
 	def __init__(
 			self, 
+			style = None,
 			x = 0, y = 0, 
 			width = 80, height = 50, 
-			style=None
 		):
-		super(Diamond, self).__init__(Point(x, y), style);
+		super(Diamond, self).__init__(style, Point(x, y));
 
 		p1 = Point(x-width/2.0, y);
 		p2 = Point(x, y-height/2.0);
@@ -99,18 +98,18 @@ class Diamond(ComplexShape):
 		self.addJointPoint(Point.center(p3, p4));
 		self.addJointPoint(Point.center(p1, p4));
 
-		polygon = Polygon((p1, p2, p3, p4));
+		polygon = Polygon(self.style, (p1, p2, p3, p4));
 		self.addShape(polygon);
 
 class Rectangle(ComplexShape):
 	'''Rectangle'''
 	def __init__(
 			self, 
+			style = None,
 			x=0, y=0, 
 			width=100, height=80, 
-			style = None
 		):
-		super(Rectangle, self).__init__(Point(x, y), style = style);
+		super(Rectangle, self).__init__(style, Point(x, y));
 		p1 = Point(x-width/2.0, y-height/2.0);
 		p2 = Point(x+width/2.0, y-height/2.0);
 		p3 = Point(x+width/2.0, y+height/2.0);
@@ -125,19 +124,19 @@ class Rectangle(ComplexShape):
 		self.addJointPoint(Point.center(p3, p4));
 		self.addJointPoint(Point.center(p1, p4));
 
-		polygon = Polygon((p1, p2, p3, p4));
+		polygon = Polygon(self.style, (p1, p2, p3, p4));
 		self.addShape(polygon);
 
 class RoundedRect(PrimitiveShape):
 	'''Rounded Rectangle'''
 	def __init__(
 			self, 
+			style = None,
 			x = 0, y = 0, 
 			width = 80, height = 60, 
 			border_radius = 5, 
-			style = None
 		):
-		super(RoundedRect, self).__init__(Point(x,y), style = style)
+		super(RoundedRect, self).__init__(style, Point(x,y))
 		p1 = Point(x-width/2.0, y-height/2.0);
 		p2 = Point(x+width/2.0, y-height/2.0);
 		p3 = Point(x+width/2.0, y+height/2.0);

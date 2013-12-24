@@ -15,41 +15,25 @@ class Line(PrimitiveShape):
 	''' Abstract class for all lines'''
 	def __init__(
 			self, 
+			style = None,
 			center = Point(0, 0), 
-			style=None
 		):
-		super(Line, self).__init__(center, style);
+		super(Line, self).__init__(style, center);
 		self.path = None;
 
 	def getStyleSetting(self):
 		lineStyle = [];
-		lineStyle.append(self.style.strokeColor.getPyxColor());
-		lineStyle.append(style.linewidth(self.style.strokeWidth));
-		lineStyle.append(Style.getPyXLineStyle(self.style.lineStyle));
-		if(self.style.useBeginArrow):
-			lineStyle.append(
-				deco.barrow(
-					[
-						deco.stroked([color.rgb(0,0,0)]),
-						deco.filled([color.rgb(0,0,0)])
-					],
-					size = self.style.beginArrowSize
-				)
-			)
-		if(self.style.useEndArrow):
-			lineStyle.append(
-				deco.earrow(
-					[
-						deco.stroked([color.rgb(0,0,0)]),
-						deco.filled([color.rgb(0,0,0)])
-					],
-					size = self.style.endArrowSize
-				)
-			)
+		lineStyle.append(self.style.getPyXStrokeColor());
+		lineStyle.append(self.style.getPyXStrokeWidth());
+		lineStyle.append(self.style.getPyXLineStyle());
+		if self.style.getUseBeginArrow():
+			lineStyle.append(self.style.getPyXBeginArrow())
+		if self.style.getUseEndArrow():
+			lineStyle.append(self.style.getPyXEndArrow())
 		return lineStyle
 
 	def draw(self, canvas):
-		if self.style.doStroke:
+		if self.style.getDoStroke():
 			canvas.stroke(
 					self.path,
 					self.getStyleSetting()
@@ -60,11 +44,11 @@ class StraightLine(Line):
 	''' A straight line from point to point'''
 	def __init__(
 			self, 
+			style = None,
 			p1 = Point(0, 0),
-			p2 = Point(20, 20), 
-			style = None
+			p2 = Point(20, 20)
 		):
-		super(StraightLine, self).__init__(Point.center(p1, p2), style);
+		super(StraightLine, self).__init__(style, Point.center(p1, p2));
 
 		pathitems = [];
 		pathitems.append(path.moveto(p1.x, p1.y));
@@ -73,8 +57,10 @@ class StraightLine(Line):
 
 class Polyline(Line):
 
-	def __init__(self, *pos):
-		super(Polyline, self).__init__(Point.center(*pos));
+	def __init__(self, style = None, pos = None):
+		if pos == None:
+			pos = self.getDefaultPoints();
+		super(Polyline, self).__init__(style, Point.center(*pos));
 
 		pathitems = [];
 		pathitems.append(path.moveto(pos[0].x, pos[0].y));
@@ -85,50 +71,78 @@ class Polyline(Line):
 			self.addJointPoint( Point(pos[i+1].x, pos[i+1].y));
 
 		self.path = path.path(*pathitems);
+	
+	def getDefaultPoints(self):
+		points = (
+				Point(0, 0),
+				Point(20, 30),
+				Point(50, -15),
+				Point(-30, 70)
+			)
+		return points
 
 	def draw(self, canvas):
 		super(Polyline,self).draw(canvas);
 
 
 class ElbowLine(ComplexShape):
-	def __init__(self, firstFoldX, *pos):
-		super(ElbowLine, self).__init__(Point.center(*pos));
+	'''ElbowLine'''
+	def __init__(
+			self, 
+			style = None, 
+			pos = None,
+			firstFold = 'x'
+		):
+		if pos == None:
+			pos = self.getDefaultPoints();
+		super(ElbowLine, self).__init__(style, Point.center(*pos));
 		corners = []
 		corners.append(pos[0]);
 		self.addJointPoint(pos[0]);
-		foldX = firstFoldX
+		nextFold = firstFold
 		for i in range(len(pos)-1):
 			p = Point(0,0)
 			self.addJointPoint(pos[i+1]);
-			if(foldX):
+			if nextFold == 'x':
 				p = Point(
 						pos[i+1].x,
 						pos[i].y
-						)
-			else:
+					)
+				nextFold = 'y'
+			elif nextFold == 'y':
 				p = Point(
 						pos[i].x,
 						pos[i+1].y
 						)
-
-				foldX = not foldX;
+				nextFold = 'x'
+			else:
+				raise ValueError("First fold can only be 'x' or 'y'") 
 			corners.append(p)
 			self.addJointPoint(p);
 		corners.append(pos[-1]);
 
 		self.addShape(
-			Polyline( *corners )
+			Polyline(self.style,  corners)
 		)
+		
+	def getDefaultPoints(self):
+		points = (
+				Point(0, 0),
+				Point(30, -30),
+				Point(60, -60), 
+				Point(100, -0) 
+			)
+		return points
 
-		def draw(self, canvas):
-			super(ElbowLine, self).draw(canvas);
+	def draw(self, canvas):
+		super(ElbowLine, self).draw(canvas);
 
 class TensionCurve(Line):
 	'''Curve from serveral points'''
 	def __init__(self, style=None, pos=None):
 		if pos==None :
 			pos = self.getDefaultPoints();
-		super(TensionCurve, self).__init__(Point.center(*pos), style);
+		super(TensionCurve, self).__init__(style, Point.center(*pos));
 
 		pathitems = []
 		i = 0
@@ -155,4 +169,6 @@ class TensionCurve(Line):
 
 if __name__ == "__main__":
 	StraightLine.preview()
+	Polyline.preview()
+	ElbowLine.preview()
 	TensionCurve.preview()

@@ -9,15 +9,35 @@ from cc_Plot import Plot
 from cc_Style import Style
 
 class Shape(object):
-	'''All objects on a plot'''
+	'''All objects on a plot
+	   	
+		Parameters follows a pattern:
+		1. style, 
+		2. x, y or points tuple
+		3. size information like width, height or radius if needed
+		4. content if needed
+		5. other shape specific required information
+		All parameters must have a default value for thumbnail generating
+		
+		Shapes keeps a copy of the style sheet
+	'''
 
-	def __init__(self, center=Point(0,0), style = None):
+	def __init__(
+			self, 
+			style = None,
+			center = Point(0,0)
+		):
 		self.center = center;
 		self.jointPoints = [];
-		if not style:
-			self.style = Style.getSnapshot()
-		else:
-			self.style = Style.getSnapshot(style)
+		self.style = self.getStyleSheetCopy(style)
+
+	def getStyleSheetCopy(self, style):
+		if style != None:	
+			if not isinstance(style, Style):
+				raise TypeError(
+						"All shapes should have Style as first parameter"
+					)
+		return Style.getSnapshot(style)
 	
 	def addJointPoint(self, point):
 		self.jointPoints.append(point);
@@ -54,15 +74,22 @@ class Shape(object):
 		p.savePNG('preview/' + cls.__name__)
 
 class PrimitiveShape(Shape):
-	'''Primitive shape like line, polygon, ellipse'''
-	def __init__(self, center = Point(0, 0), style=None):
-		super(PrimitiveShape, self).__init__(center, style = style)
+	'''Primitive shapes like lines, polygons, ellipses
+	PrimitiveShape have a path field for intersection detection
+	'''
+	def __init__(
+			self, 
+			style = None,
+			center = Point(0, 0)
+		):
+		super(PrimitiveShape, self).__init__(style, center)
 		self.path = None
 
 	def intersection(self, shape):
 		'''Find the intersection points of 2 shapes
 		if shape is a PrimitiveShape, find intersection, 
-		if shape is a ComplexShape, use ComplexShape's correspoding function
+		if shape is a ComplexShape, use ComplexShape's correspoding 
+		function
 		'''
 		super(PrimitiveShape, self).intersection(shape)
 		if isinstance(shape, PrimitiveShape):
@@ -72,6 +99,7 @@ class PrimitiveShape(Shape):
 			return shape.intersection(self)
 	
 	def PPIntersection(self, shape):
+		''' Find intersection points between primitive shapes '''
 		if not isinstance(shape, PrimitiveShape):
 			raise TypeError("Shape is expected to be a PrimitiveShape");
 		ps = self.path.intersect(shape.path)
@@ -83,28 +111,32 @@ class PrimitiveShape(Shape):
 
 	def draw(self, canvas):
 		super(PrimitiveShape, self).draw(canvas)
-		if self.style.doFill:
+		if self.style.getDoFill():
 			canvas.fill(
 				self.path,
 				[
-					self.style.fillColor.getPyxColor()
+					self.style.getPyXFillColor()
 				]
 			)
-		if self.style.doStroke:
+		if self.style.getDoStroke():
 			canvas.stroke(
 				self.path,
 				[
-					self.style.strokeColor.getPyxColor(),
-					style.linewidth(self.style.strokeWidth),
-					Style.getPyXLineStyle(self.style.lineStyle)
+					self.style.getPyXStrokeColor(),
+					self.style.getPyXStrokeWidth(),
+					self.style.getPyXLineStyle()
 				]
 			)
 
 
 class ComplexShape(Shape):
 	''' Complex shape is a group of primitive or complex shapes '''
-	def __init__(self, center=Point(0, 0), style=None):
-		super(ComplexShape, self).__init__(center, style = style);
+	def __init__(
+			self, 
+			style = None,
+			center = Point(0, 0)
+		):
+		super(ComplexShape, self).__init__(style, center);
 		self.shapes = [];
 
 	def intersection(self, shape):

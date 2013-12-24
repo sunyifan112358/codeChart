@@ -6,7 +6,7 @@ class Color:
 		self.g = g;
 		self.b = b;
 
-	def getPyxColor(self):
+	def getPyXColor(self):
 		return color.rgb(
 					self.r*1.0/255, 
 					self.g*1.0/255, 

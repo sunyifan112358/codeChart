@@ -1,76 +1,108 @@
-__all__ = ['StyleSet', 'Style']
+__all__ = ['Style']
 from pyx import *
 from cc_Color import Color
 import copy
 
-class StyleSet(object):
-	def __init__(self):
-		''' Stroke and fill '''
-		self.doFill = False
-		self.doStroke = True
-		self.fillColor = Color(0, 0, 0)
-		self.strokeColor = Color(0, 0, 0)
-		self.strokeWidth = 1
-		self.lineStyle = "SOLID"
-
-		'''Arrow related'''
-		self.useBeginArrow = False;
-		self.beginArrowSize = 2;
-		self.useEndArrow = True;
-		self.endArrowSize = 2;
-
-		''' Text related '''
-		self.textHAlign = "LEFT";
-		self.textVAlign = "BASELINE";
-		self.textHFlush = "LEFT";
-		self.textSize  = 24;
-		
-
 class Style(object):
+	'''Style setting for all shapes
+	All shapes keeps an instance of Style and use it for rendering
+	'''
 
-	prototype = StyleSet();
+	def __init__(self):
+		'''Set the default style sheet'''
+
+		#rotation
+		self._rotate = 0
+
+		#Stroke and fill
+		self._doFill = False
+		self._doStroke = True
+		self._fillColor = Color(0, 0, 0)
+		self._strokeColor = Color(0, 0, 0)
+		self._strokeWidth = 1
+		self._lineStyle = "SOLID"
+
+		#Arrow related 
+		self._useBeginArrow = False;
+		self._beginArrowSize = 2;
+		self._useEndArrow = True;
+		self._endArrowSize = 2;
+
+		#Text related
+		self._textHAlign = "CENTER";
+		self._textVAlign = "BASELINE";
+		self._textHFlush = "LEFT";
+		self._textSize  = 12;
+
+	def rotate(self, rotate):
+		s = Style.getSnapshot(self)
+		s._rotate = rotate
+		return s
+
+	def getPyXRotate(self):
+		return trafo.rotate(self.getRotate())
+
+	def getRotate(self):
+		return self._rotate;
+			
+	def noFill(self):
+		s = Style.getSnapshot(self)
+		s._doFill = False;
+		return s
+
+	def getDoFill(self):
+		return self._doFill
+
+	def noStroke(self):
+		s = Style.getSnapshot(self)
+		s._doStroke = False;
+		return s
 	
+	def getDoStroke(self):
+		return self._doStroke
 
-	@staticmethod
-	def noFill(instance = None):
-		if not instance:
-			instance = Style.prototype;
-		instance.doFill = False;
+	def fill(self, r, g, b):
+		s = Style.getSnapshot(self)
+		s._fillColor = Color(r, g, b);
+		s._doFill = True;
+		return s
+	
+	def getFillColor(self):
+		return self._fillColor()
 
-	@staticmethod
-	def noStroke(instance = None):
-		if not instance:
-			instance = Style.prototype;
-		instance.doStroke = False;
+	def getPyXFillColor(self):
+		return self._fillColor.getPyXColor()
 
-	@staticmethod
-	def fill(r, g, b, instance = None):
-		if not instance:
-			instance = Style.prototype;
-		instance.fillColor = Color(r, g, b);
-		instance.doFill = True;
+	def stroke(self, r, g, b):
+		s = Style.getSnapshot(self)
+		s._strokeColor = Color(r, g, b)
+		s._doStroke = True
+		return s
 
-	@staticmethod
-	def stroke(r, g, b, instance = None):
-		if not instance:
-			instance = Style.prototype;
-		instance.strokeColor = Color(r, g, b)
-		instance.doStroke = True
+	def getStrokeColor(self):
+		return self._strokeColor
+	
+	def getPyXStrokeColor(self):
+		return self._strokeColor.getPyXColor()
 
-	@staticmethod
-	def strokeWidth(strokeWidth, instance = None):
-		if not instance:
-			instance = Style.prototype
-		instance.strokeWidth = strokeWidth;
+	def strokeWidth(self, strokeWidth):
+		s = Style.getSnapshot(self)
+		s._strokeWidth = strokeWidth;
+		return s
+	
+	def getStrokeWidth(self):
+		return self._strokeWidth
+	
+	def getPyXStrokeWidth(self):
+		return style.linewidth(self._strokeWidth)
 
-	@staticmethod
-	def lineStyle(lineStyle, instance = None):
-		if not instance:
-			instance = Style.prototype
-		instance.lineStyle = lineStyle;
+	def lineStyle(self, lineStyle):
+		s = Style.getSnapshot(self)
+		s._lineStyle = lineStyle;
+		return s
 
-	@staticmethod
-	def getPyXLineStyle(lineStyle):
+	def getPyXLineStyle(self):
+		lineStyle = self._lineStyle
 		if(lineStyle=="SOLID"):
 			return style.linestyle.solid
 		elif(lineStyle == "DASHED"):
@@ -80,44 +112,79 @@ class Style(object):
 		elif(lineStyle == "DASHDOTTED"):
 			return style.linestyle.dashdotted
 		else:
-			raise Exception("Unsupport line style "+lineStyle+
-					" Choose from SOLID, DASHED, DOTTED and DASHDOTTED"
+			raise ValueError(
+				"Unsupport line style "+lineStyle+
+				" Choose from SOLID, DASHED, DOTTED and DASHDOTTED"
+			)
+
+	def noBeginArrow(self):
+		s = Style.getSnapshot(self)
+		s._useBeginArrow = False
+		return s
+	
+	def getUseBeginArrow(self):
+		return self._useBeginArrow
+
+	def beginArrow(self, size):
+		s = Style.getSnapshot(self)
+		s._beginArrowSize = size
+		s._userBeginArrow = True
+		return s
+
+	def getBeginArrowSize(self):
+		return self._beginArrowSize
+
+	def getPyXBeginArrow(self):
+		if self.getUseBeginArrow():
+			return deco.barrow(
+					[
+						deco.stroked([self.getPyXStrokeColor()]),
+						deco.filled([self.getPyXStrokeColor()])
+					],
+					size = self.getBeginArrowSize()
 				)
+		else:
+			return None
 
-	@staticmethod
-	def noBeginArrow(instance = None):
-		if not instance:
-			instance = Style.prototype
-		instance.useBeginArrow = False
+	def noEndArrow(self):
+		s = Style.getSnapshot(self)
+		s._useEndArrow = False
+		return s
+	
+	def getUseEndArrow(self):
+		return self._useEndArrow
 
-	@staticmethod
-	def beginArrow(size, instance = None):
-		if not instance:
-			instance = Style.prototype
-		instance.beginArrowSize = size
-		instance.userBeginArrow = True
+	def endArrow(self, size):
+		s = Style.getSnapshot(self)
+		s._endArrowSize = size
+		s._useEndArrow = True
+		return s
 
-	@staticmethod
-	def noEndArrow(instance = None):
-		if not instance:
-			instance = Style.prototype
-		instance.useEndArrow = False
+	def getEndArrowSize(self):
+		return self._endArrowSize
 
-	@staticmethod
-	def endArrow(size, instance = None):
-		if not instance:
-			instance = Style.prototype
-		instance.endArrowSize = size
-		instance.useEndArrow = True
+	def getPyXEndArrow(self):
+		if self.getUseEndArrow():
+			return deco.earrow(
+					[
+						deco.stroked([self.getPyXStrokeColor()]),
+						deco.filled([self.getPyXStrokeColor()])
+					],
+					size = self.getEndArrowSize()
+				)
+		else:
+			return None
 
-	@staticmethod
-	def textHAlign(hAlignString, instance = None ):
-		if not instance:
-			instance = Style.prototype
-		instance.textHAlign = hAlignString;
+	def textHAlign(self, hAlignString):
+		s = Style.getSnapshot(self)
+		s._textHAlign = hAlignString;
+		return s
 
-	@staticmethod
-	def getPyXHAlign(hAlign):
+	def getTextHAlign(self):
+		return s_textHAlign
+
+	def getPyXHAlign(self):
+		hAlign = self._textHAlign
 		if(hAlign == "LEFT"):
 			return text.halign.boxleft;
 		elif(hAlign == "CENTER"):
@@ -125,17 +192,21 @@ class Style(object):
 		elif(hAlign == "RIGHT"):
 			return text.halign.boxright;
 		else:
-			raise Exception("In valid horizontal align: " + hAlign +
-				" Choose among LEFT, CENTER and RIGHT");
+			raise ValueError(
+					"In valid horizontal align: " + hAlign +
+					" Choose among LEFT, CENTER and RIGHT"
+				);
 
-	@staticmethod
-	def textVAlign(vAlignString, instance = None):
-		if not instance:
-			instance = Style.prototype
-		instance.textVAlign = vAlignString;
+	def textVAlign(self, vAlignString):
+		s = Style.getSnapshot(self)
+		s._textVAlign = vAlignString;
+		return s
 
-	@staticmethod
-	def getPyXVAlign(vAlign):
+	def getTextVAlign(self):
+		return self._textVAlign
+
+	def getPyXVAlign(self):
+		vAlign = self._textVAlign
 		if(vAlign == "TOP"):
 			return text.valign.top;
 		elif(vAlign == "MIDDLE"):
@@ -145,17 +216,19 @@ class Style(object):
 		elif(vAlign == "BASELINE"):
 			return text.valign.baseline;
 		else:
-			raise Exception("In valid vertical align: " + hAlignString +
+			raise ValueError("In valid vertical align: " + hAlignString +
 				" Choose among TOP, MIDDLE, BOTTOM and BASELINE");
 
-	@staticmethod
-	def textHFlush(hFlushString, instance = None):
-		if not instance:
-			instance = Style.prototype
-		instance.textHFlush = hFlushString;	
+	def textHFlush(self, hFlushString):
+		s = Style.getSnapshot(self)
+		s._textHFlush = hFlushString;	
+		return s
 
-	@staticmethod
-	def getPyXHFlush(hFlush, instance = None):
+	def getTextHFlush(self):
+		return self._textHFlush
+
+	def getPyXHFlush(self):
+		hFlush = self._textHFlush
 		if(hFlush == "LEFT"):
 			return text.halign.flushleft
 		elif(hFlush == "CENTER"):
@@ -163,31 +236,36 @@ class Style(object):
 		elif(hFlush == "RIGHT"):
 			return text.halign.flushright
 		else:
-			raise Exception("In valid horizontal flush: " + hFLushString +
-				" Choose among LEFT, CENTER and RIGHT");
+			raise ValueError(
+					"In valid horizontal flush: " + hFLush +
+					" Choose among LEFT, CENTER and RIGHT"
+				);
 
+	def textSize(self, size):
+		s = Style.getSnapshot(self)
+		s._textSize = size;
+		return s
 
-	@staticmethod
-	def textSize(size, instance = None):
-		if not instance:
-			instance = Style.prototype
-		instance.textSize = size;
+	def getTextSize(self):
+		return self._textSize
 
-	@staticmethod
-	def getPyXTextSize(tSize):
-		return text.size(tSize);
+	def getPyXTextSize(self):
+		'''Text size is achieved by scale'''
+		return trafo.scale(sx=self.getTextSize())	
+
 
 	@staticmethod
 	def getSnapshot(instance = None):
 		if not instance:
-			p = Style.prototype;
+			if isinstance(instance, Style):
+				raise TypeError( "Only take snapshot for Style tyle")
+			p = Style()
+			return p
 		else:
-			p = instance
+			return copy.deepcopy(instance)
 
-		s = copy.deepcopy(p);
-		return s
-
-
-	def __init__(self):
-		pass
-
+if __name__ == "__main__":
+	s = Style()
+	s2 = s.noFill()
+	print s.doFill
+	print s2.doFill

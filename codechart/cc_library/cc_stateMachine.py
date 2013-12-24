@@ -10,21 +10,24 @@ class SM_State(ComplexShape):
 	'''States in state machine'''	
 	def __init__(
 			self,
+			style = None, 
 			x = 0, y = 0, 
 			radius = 30,
-			text = "IDLE",
-			style = None
+			text = "IDLE"
 		):
-		super(SM_State, self).__init__(Point(x, y), style);
+		super(SM_State, self).__init__(style, Point(x, y));
 
-		Style.textHAlign("CENTER", instance = self.style)
-		Style.textHFlush("CENTER", instance = self.style)
-		Style.textVAlign("MIDDLE", instance = self.style)
+		self.style = self.style \
+					.textHAlign("CENTER") \
+					.textHFlush("CENTER") \
+					.textVAlign("MIDDLE")
 
-		e = Ellipse(x, y, radius, style = self.style);
+		e = Ellipse(self.style, x, y, radius);
 		t = Text(
-				text, x, y, 0,
-				radius*2*0.8, style = self.style
+				self.style,
+				x, y, 
+				1.8 * radius,
+				text
 			);
 
 		self.addShape(e, t);
@@ -34,18 +37,18 @@ class SM_Transition(ComplexShape):
 	''' A state transition line from state1 to state2'''
 	def __init__(
 			self,
+			style = None,
 			state1 = None, state2 = None,
 			transitionCase = "Something",
 			midPointModification = Point(0, 10),
 			textPointModification = Point(0, 3),
 			textRotate = None,
-			style = None
 		):
 		
 		if state1 == None:
-			state1 = SM_State(0, 0, 30, "IDLE")
+			state1 = SM_State(style, 0, 0, 30, "IDLE")
 		if state2 == None:
-			state2 = SM_State(100, 100, 30, "IDLE2")
+			state2 = SM_State(style, 100, 100, 30, "IDLE2")
 		if textRotate == None:
 			textRotate = self.getTextRotate(state1.center, state2.center)
 
@@ -53,28 +56,31 @@ class SM_Transition(ComplexShape):
 		midPointModified = midPoint.move(midPointModification)
 		textPoint = midPointModified.move(textPointModification)
 
-		super(SM_Transition, self).__init__(midPointModified, style)
+		super(SM_Transition, self).__init__(style, midPointModified)
 
-		l1 = StraightLine(state1.center, midPointModified)
-		l2 = StraightLine(state2.center, midPointModified)
-		
+		l1 = StraightLine(self.style, state1.center, midPointModified)
+		l2 = StraightLine(self.style, state2.center, midPointModified)
+	
+		#self.addShape(state1, state2, l1, l2)
+	
 		p1 = l1.intersection(state1)[0]
 		p2 = l2.intersection(state2)[0]
-
+		
+	
 		curve = TensionCurve( self.style, (p1, midPointModified, p2) )
-		Style.textVAlign("BOTTOM", self.style)
-		Style.textHAlign("CENTER", self.style)
-		Style.textHFlush("CENTER", self.style)
+		self.style = self.style \
+					.textVAlign("BOTTOM") \
+					.textHAlign("CENTER") \
+					.textHFlush("CENTER")
 		text = Text(
-				transitionCase, 
+				self.style.rotate(textRotate),
 				textPoint.x,
 				textPoint.y,
-				textRotate,
-				None,
-				self.style
-		)
+				None, 
+				transitionCase
+			)
 		self.addShape(curve, text)
-	
+
 	def getTextRotate(self, p1, p2):
 
 		xDiff = p2.x*1.0 - p1.x
